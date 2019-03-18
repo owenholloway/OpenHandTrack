@@ -1,2 +1,3 @@
 src/venv/**
 **/workspace.xml
+**/__pycache__/**
