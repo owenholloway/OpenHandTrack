@@ -14,6 +14,7 @@ The project has been written using the PyCharm IDE from jetbrains. This is not a
 
 * [SciPy](https://www.scipy.org/)
 * [NumPy](http://www.numpy.org/)
+* [opencv-python](https://pypi.org/project/opencv-python/)
 
 To install packages on NIX type system execute `./packages.sh` from the src directory
 
