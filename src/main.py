@@ -7,21 +7,21 @@ import alglib.test as test
 
 from vision import init
 
-XRESOLUTION = 1080
-YRESOLUTION = 720
+X_RESOLUTION = 1080
+Y_RESOLUTION = 720
 
-cap = init(XRESOLUTION, YRESOLUTION)
+cap = init(X_RESOLUTION, Y_RESOLUTION)
 
-while(True):
+while True:
 
     # Capture frame-by-frame
     ret, frame = cap.read()
 
     # TODO process the frame here
-
+    edges = test.test(frame)
 
     # Display the resulting frame
-    cv2.imshow('frame', frame)
+    cv2.imshow('frame', edges)
 
     if cv2.waitKey(1) & 0xFF == ord('q'):
         break
