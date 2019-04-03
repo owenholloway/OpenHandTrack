@@ -18,10 +18,13 @@ while True:
     ret, frame = cap.read()
 
     # TODO process the frame here
-    edges = test.test(frame)
+    returnFrame, x, y = test.test(frame)
+
+    #cv2.circle(returnFrame, (int(x), int(y)), int(10), (0, 255, 255), 2)
+    #cv2.putText(frame, "point", (int(x), int(y)), cv2.FONT_HERSHEY_SIMPLEX, 1, 100)
 
     # Display the resulting frame
-    cv2.imshow('frame', edges)
+    cv2.imshow('frame', returnFrame)
 
     if cv2.waitKey(1) & 0xFF == ord('q'):
         break

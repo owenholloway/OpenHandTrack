@@ -7,7 +7,8 @@ def init(xres, yres):
 
     print("starting vision")
 
-    cap = cv2.VideoCapture(0)
+    # change this number to set the camera being used
+    cap = cv2.VideoCapture(1)
 
     cap.set(3, xres)
     cap.set(4, yres)
