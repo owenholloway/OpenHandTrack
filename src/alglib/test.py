@@ -1,5 +1,6 @@
 import cv2
-import numpy as np
+import alglib.filters as filters
+import alglib.convex_hull as ch
 
 def test(frame):
 
@@ -7,22 +8,16 @@ def test(frame):
 
     cv2.putText(frame, output_text, (0, 15), cv2.FONT_HERSHEY_SIMPLEX, 0.5, (255, 255, 255))
 
-    edges = cv2.Canny(frame, 8, 60)
+    mask = filters.hsv_mask(frame)
 
-    colour_space = cv2.cvtColor(frame, cv2.COLOR_BGR2HLS)
-
-    #lower = np.array([2, 35, 128], np.uint8)
-    #upper = np.array([30, 124, 255], np.uint8)
-
-    #mask = cv2.inRange(hsv, lower, upper)
-    #mask = cv2.erode(mask, None, iterations=2)
-    #mask = cv2.dilate(mask, None, iterations=2)
-
-    #contours = cv2.findContours(mask.copy(), cv2.RETR_EXTERNAL, cv2.CHAIN_APPROX_SIMPLE)[-2]
+    contours = cv2.findContours(mask, cv2.RETR_EXTERNAL, cv2.CHAIN_APPROX_SIMPLE)[-2]
 
     (x, y) = (0, 0)
 
-    #c = max(contours, key=cv2.contourArea)
-    #((x, y), radius) = cv2.minEnclosingCircle(c)
+    c = max(contours, key=cv2.contourArea)
 
-    return colour_space, x, y
+    hull = ch.getHullPoints(c)
+
+    ((x, y), radius) = cv2.minEnclosingCircle(c)
+
+    return mask, contours, x, y, hull
