@@ -10,7 +10,7 @@ def hsv_mask(frame):
     upper = np.array([30, 124, 255], np.uint8)
 
     mask = cv2.inRange(colour_space, lower, upper)
-    #mask = cv2.erode(mask, None, iterations=3)
-    #mask = cv2.dilate(mask, None, iterations=3)
+    mask = cv2.erode(mask, None, iterations=3)
+    mask = cv2.dilate(mask, None, iterations=3)
 
     return mask

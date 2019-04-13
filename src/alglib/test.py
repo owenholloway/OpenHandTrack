@@ -16,7 +16,7 @@ def test(frame):
 
     c = max(contours, key=cv2.contourArea)
 
-    hull = ch.getHullPoints(c)
+    hull, defects = ch.get_hull_points(c)
 
     ((x, y), radius) = cv2.minEnclosingCircle(c)
 
