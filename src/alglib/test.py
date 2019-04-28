@@ -1,5 +1,5 @@
 import cv2
-import alglib.filters as filters
+import alglib.processing as filters
 import alglib.convex_hull as ch
 
 
