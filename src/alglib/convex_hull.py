@@ -4,13 +4,12 @@ import numpy as np
 
 def get_hull_points(contour):
 
-    hull = cv2.convexHull(contour, False)
-
-    cnt = cv2.approxPolyDP(contour, 0.01 * cv2.arcLength(contour, True), True)
+    hull = cv2.convexHull(contour, returnPoints=False)
+    hullPoints = cv2.convexHull(contour, returnPoints=True)
 
     try:
         defects = cv2.convexityDefects(contour, hull)
     except Exception:
         defects = None
 
-    return hull, defects
+    return hullPoints, hull, defects
