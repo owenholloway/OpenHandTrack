@@ -2,19 +2,21 @@ import cv2
 import numpy as np
 
 
-def guass(frame):
+def guass(frame, sigma=1):
 
-    kernal = cv2.getGaussianKernel(15, 1)
+    kernel = cv2.getGaussianKernel(5, sigma)
 
-    frame = cv2.filter2D(frame, -1, kernal)
+    frame = cv2.filter2D(frame, -1, kernel)
 
     return frame
 
 
 def sharpen(frame):
 
-    kernal = np.array([[-1, -1, -1], [-1, 9, -1], [-1, -1, -1]])
+    kernel = np.array([[-1, -1, -1],
+                       [-1,  9, -1],
+                       [-1, -1, -1]])
 
-    frame = cv2.filter2D(frame, -1, kernal)
+    frame = cv2.filter2D(frame, -1, kernel)
 
     return frame
