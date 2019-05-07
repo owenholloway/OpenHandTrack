@@ -7,6 +7,7 @@ import numpy as np
 import alglib.filter as filter
 import alglib.processing as processing
 import alglib.colour_space as colour
+import alglib.two_filter as two_filter
 
 from vision import init
 
@@ -22,37 +23,19 @@ while True:
 
     frame_gpu = cv2.UMat(frame)
 
-    frame_blur = filter.guass(frame)
-    frame_blur_gray = colour.gray(frame_blur)
+    frame_gpu = two_filter.filtered_frame(frame_gpu)
 
-    frame_sharpen = filter.sharpen(frame)
-    frame_sharpen_gray = colour.hsv(frame_sharpen)
-    frame_sharpen_gray_blur = filter.guass(frame)
+    filtered_frame = two_filter.filtered_frame(frame)
 
-    frame_gpu_blur = filter.guass(frame_gpu)
+    pre_canny = filter.sharpen(filtered_frame)
+    pre_canny = colour.gray(pre_canny)
 
-    #contours_canny_blur = processing.contour_canny(frame_blur_gray)
-    #contours_canny_sharp = processing.contour_canny(frame_sharpen_gray_blur)
+    canny_contours = processing.contour_canny(pre_canny)
 
-    # contours_hsv = processing.contour_hsv(frame_gpu_blur)
+    if len(canny_contours) > 0:
+        frame_gpu = cv2.drawContours(frame_gpu, canny_contours, -1, (255, 0, 255), 1, 8)
 
-    # blobs = processing.blob_detect(frame_gpu_blur)
 
-    # if len(contours_hsv) > 1:
-    #    frame_gpu = cv2.drawContours(frame_gpu, contours_hsv, -1, (0, 255, 255), 1, 8)
-
-    # if len(contours_canny_blur) > 1:
-        # frame_gpu = cv2.drawContours(frame_gpu, contours_canny_blur, -1, (255, 255, 0), 1, 8)
-
-    #if len(contours_canny_sharp) > 1:
-    #    frame_gpu = cv2.drawContours(frame_gpu, contours_canny_sharp, -1, (255, 0, 255), 1, 8)
-
-    # frame_gpu = cv2.drawContours(frame_gpu, blobs, -1, (255, 255, 0), 1, 8)
-
-    # Display the resulting frame
     cv2.imshow('frame', frame_gpu)
-
-    cv2.imshow('hist', processing.hsv_histogram(frame))
-
     if cv2.waitKey(1) & 0xFF == ord('q'):
         break

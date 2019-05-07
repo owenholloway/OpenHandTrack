@@ -72,9 +72,9 @@ hsv_map = cv2.cvtColor(hsv_map, cv2.COLOR_HSV2BGR)
 hist_scale = 10
 
 
-def hsv_histogram(frame):
+def hsv_histogram(hsv):
 
-    hsv = cv2.cvtColor(frame, cv2.COLOR_BGR2HSV)
+    #hsv = cv2.cvtColor(frame, cv2.COLOR_BGR2HSV)
     dark = hsv[..., 2] < 32
     hsv[dark] = 0
 

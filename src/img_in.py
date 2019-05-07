@@ -7,43 +7,52 @@ import numpy as np
 import alglib.filter as filter
 import alglib.processing as processing
 import alglib.colour_space as colour
-from matplotlib import pyplot as plt
+from os import listdir
+from os.path import isfile, join
 
-img1 = cv2.imread("hand_test/Hand_0001351.jpg")
-img2 = cv2.imread("hand_test/Hand_0001108.jpg")
+path = "hands/"
 
-img2 = colour.white_balance(img2)
+hand_files = [f for f in listdir(path) if isfile(join(path, f))]
 
-lower = np.array([0, 40, 0], np.uint8)
-upper = np.array([255, 255, 255], np.uint8)
+histograms = []
 
-frame_blur1 = filter.guass(img1)
-frame_sharp2 = filter.sharpen(img2)
-frame_blur2 = filter.guass(img2)
+hands = 0
 
-img2_bw = colour.gray(frame_blur2)
+lower1 = np.array([0, 30, 0])
+upper1 = np.array([180, 255, 256])
 
-img1_hsv = colour.hsv(img1)
+lower2 = np.array([25, 30, 0])
+upper2 = np.array([160, 256, 256])
 
-hist = cv2.calcHist([img1_hsv], [0, 1], None, [180, 256], [0, 180, 0, 256])
 
-contours1 = processing.contour_hsv(frame_blur1, lower, upper)
+for hand in hand_files:
+    img = cv2.imread(path+hand)
 
-contours2 = processing.contour_canny(img2_bw)
+    img_blur = filter.guass(img, 0.8)
 
-contours1_test = processing.filter_contours(contours1)
+    hsv_filer1 = processing.hsv_mask(img_blur, lower1, upper1)
+    hsv_filer2 = processing.hsv_mask(img_blur, lower2, upper2)
+    cv2.bitwise_not(hsv_filer2, hsv_filer2)
 
-contours2_test = processing.filter_contours(contours2, 100)
+    hsv_filter_final = cv2.bitwise_and(hsv_filer1, hsv_filer2)
 
-img2 = cv2.drawContours(img2, contours2_test, -1, (255, 0, 255), 1, 8)
+    img_masked = cv2.bitwise_and(img, img, mask=hsv_filter_final)
 
-for cnt in contours2_test:
-    img2 = cv2.fillPoly(img2, pts=[cnt], color=(0, 255, 0))
+    histograms.append(processing.hsv_histogram(colour.hsv(img_masked)))
 
-cv2.imshow('frame', img2)
+    hands += 1
 
-cv2.imshow(hist, interpolation='nearest')
-plt.show()
+    if hands > 25:
+        break
+
+frame = 0
+
+for hist in histograms:
+
+    cv2.imshow('frame' + str(frame), hist)
+
+    frame += 1
+
 
 while True:
 

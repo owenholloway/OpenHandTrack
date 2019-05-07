@@ -2,4 +2,5 @@ src/venv/**
 **/workspace.xml
 **/__pycache__/**
 **/**.pyc
-src/alglib/hands/**.**
+src/hands/**.**
+src/hand_test/**.**
