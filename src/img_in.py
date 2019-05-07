@@ -7,6 +7,7 @@ import numpy as np
 import alglib.filter as filter
 import alglib.processing as processing
 import alglib.colour_space as colour
+from matplotlib import pyplot as plt
 
 img1 = cv2.imread("hand_test/Hand_0001351.jpg")
 img2 = cv2.imread("hand_test/Hand_0001108.jpg")
@@ -22,9 +23,13 @@ frame_blur2 = filter.guass(img2)
 
 img2_bw = colour.gray(frame_blur2)
 
+img1_hsv = colour.hsv(img1)
+
+hist = cv2.calcHist([img1_hsv], [0, 1], None, [180, 256], [0, 180, 0, 256])
+
 contours1 = processing.contour_hsv(frame_blur1, lower, upper)
 
-contours2 = processing.contour_canny(img2_bw, 0.44)
+contours2 = processing.contour_canny(img2_bw)
 
 contours1_test = processing.filter_contours(contours1)
 
@@ -33,10 +38,12 @@ contours2_test = processing.filter_contours(contours2, 100)
 img2 = cv2.drawContours(img2, contours2_test, -1, (255, 0, 255), 1, 8)
 
 for cnt in contours2_test:
-    img2 = cv2.fillPoly(img2, pts =[cnt], color=(0, 255, 0))
+    img2 = cv2.fillPoly(img2, pts=[cnt], color=(0, 255, 0))
 
 cv2.imshow('frame', img2)
 
+cv2.imshow(hist, interpolation='nearest')
+plt.show()
 
 while True:
 

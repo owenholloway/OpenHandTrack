@@ -31,8 +31,8 @@ while True:
 
     frame_gpu_blur = filter.guass(frame_gpu)
 
-    contours_canny_blur = processing.contour_canny(frame_blur_gray)
-    contours_canny_sharp = processing.contour_canny(frame_sharpen_gray_blur)
+    #contours_canny_blur = processing.contour_canny(frame_blur_gray)
+    #contours_canny_sharp = processing.contour_canny(frame_sharpen_gray_blur)
 
     # contours_hsv = processing.contour_hsv(frame_gpu_blur)
 
@@ -44,13 +44,15 @@ while True:
     # if len(contours_canny_blur) > 1:
         # frame_gpu = cv2.drawContours(frame_gpu, contours_canny_blur, -1, (255, 255, 0), 1, 8)
 
-    if len(contours_canny_sharp) > 1:
-        frame_gpu = cv2.drawContours(frame_gpu, contours_canny_sharp, -1, (255, 0, 255), 1, 8)
+    #if len(contours_canny_sharp) > 1:
+    #    frame_gpu = cv2.drawContours(frame_gpu, contours_canny_sharp, -1, (255, 0, 255), 1, 8)
 
     # frame_gpu = cv2.drawContours(frame_gpu, blobs, -1, (255, 255, 0), 1, 8)
 
     # Display the resulting frame
     cv2.imshow('frame', frame_gpu)
+
+    cv2.imshow('hist', processing.hsv_histogram(frame))
 
     if cv2.waitKey(1) & 0xFF == ord('q'):
         break

@@ -58,6 +58,28 @@ def filter_contours(contours, area=50):
     return rtn_contours
 
 
-def hand_countours():
+def hand_contours():
 
     return
+
+
+hsv_map = np.zeros((180, 256, 3), np.uint8)
+h, s = np.indices(hsv_map.shape[:2])
+hsv_map[:, :, 0] = h
+hsv_map[:, :, 1] = s
+hsv_map[:, :, 2] = 255
+hsv_map = cv2.cvtColor(hsv_map, cv2.COLOR_HSV2BGR)
+hist_scale = 10
+
+
+def hsv_histogram(frame):
+
+    hsv = cv2.cvtColor(frame, cv2.COLOR_BGR2HSV)
+    dark = hsv[..., 2] < 32
+    hsv[dark] = 0
+
+    h = cv2.calcHist([hsv], [0, 1], None, [180, 256], [0, 180, 0, 256])
+
+    h = np.clip(h * 0.005 * hist_scale, 0, 1)
+
+    return hsv_map * h[:, :, np.newaxis] / 255.0
