@@ -20,4 +20,4 @@ def filtered_frame(frame):
 
     hsv_filter_final = cv2.bitwise_and(hsv_filer1, hsv_filer2)
 
-    return cv2.bitwise_and(frame, frame, mask=hsv_filter_final)
+    return cv2.bitwise_and(frame, frame, mask=hsv_filter_final), hsv_filter_final
