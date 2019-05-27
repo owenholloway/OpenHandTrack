@@ -3,6 +3,7 @@
 # 206891
 # 2019
 import cv2
+import numpy as np
 import alglib.processing as processing
 import alglib.two_filter as two_filter
 import alglib.convex_hull as convexhull
@@ -28,29 +29,17 @@ while True:
 
     contours = processing.filter_contours(contours)
 
-    for cnt in contours:
-        hull = convexhull.get_hull_points(cnt)
-        hull_points = len(hull)
-        if len(hull) > 0:
-            cv2.drawContours(frame, hull, -1, (255, 0, 255), 1, 8)
-    #    point0 = hull[0][0][0]
-    #    if len(hull) > 1:
-    #        for i in range(0, hull_points):
+    max_contour = max(contours, key=cv2.contourArea)
 
-    #            if i == hull_points - 1:
-    #                cv2.line(frame, (hull[i][0][0], hull[i][0][1]), (hull[0][0][0], hull[0][0][1]), (255, 255, 255), 1)
+    rect = cv2.minAreaRect(max_contour)
+    box = cv2.boxPoints(rect)
+    box = np.int0(box)
+    cv2.drawContours(frame, [box], 0, (0, 0, 255), 2)
 
-     #           else:
-      #              cv2.line(frame, (hull[i][0][0], hull[i][0][1]), (hull[i + 1][0][0], hull[i + 1][0][1]), (255, 255, 255), 1)
-
-    #pre_canny = filter.sharpen(filtered_frame)
-    #pre_canny = colour.gray(pre_canny)
-
-    #canny_contours = processing.contour_canny(filtered_frame)
+    points, hull, defects = convexhull.get_hull_points(max_contour)
 
     if len(contours) > 0:
         frame = cv2.drawContours(frame, contours, -1, (255, 0, 255), 1, 8)
-
 
     cv2.imshow('frame', frame)
     if cv2.waitKey(1) & 0xFF == ord('q'):

@@ -16,13 +16,16 @@ hand_files = [f for f in listdir(path) if isfile(join(path, f))]
 
 histograms = []
 
-hands = 0
+hands = 1
 
 lower1 = np.array([0, 30, 0])
 upper1 = np.array([180, 255, 256])
 
+#lower2 = np.array([25, 30, 0])
+#upper2 = np.array([160, 256, 256])
+
 lower2 = np.array([25, 30, 0])
-upper2 = np.array([160, 256, 256])
+upper2 = np.array([160, 30, 256])
 
 
 for hand in hand_files:
@@ -42,7 +45,7 @@ for hand in hand_files:
 
     hands += 1
 
-    if hands > 25:
+    if hands > 50:
         break
 
 frame = 0
