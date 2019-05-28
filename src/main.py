@@ -6,6 +6,7 @@ import cv2
 import numpy as np
 import alglib.processing as processing
 import alglib.two_filter as two_filter
+import alglib.colour_space as colour
 import alglib.convex_hull as convexhull
 from vision import init
 
@@ -21,7 +22,7 @@ while True:
 
     frame_gpu = cv2.UMat(frame)
 
-    frame_gpu = two_filter.filtered_frame(frame_gpu)
+    #frame_gpu = two_filter.filtered_frame(frame_gpu)
 
     filtered_frame, mask = two_filter.filtered_frame(frame)
 
@@ -29,18 +30,25 @@ while True:
 
     contours = processing.filter_contours(contours)
 
-    max_contour = max(contours, key=cv2.contourArea)
-
-    rect = cv2.minAreaRect(max_contour)
-    box = cv2.boxPoints(rect)
-    box = np.int0(box)
-    cv2.drawContours(frame, [box], 0, (0, 0, 255), 2)
-
-    points, hull, defects = convexhull.get_hull_points(max_contour)
+    preHist = processing.hsv_histogram(colour.hsv(frame))
+    postHist = processing.hsv_histogram(colour.hsv(filtered_frame))
 
     if len(contours) > 0:
-        frame = cv2.drawContours(frame, contours, -1, (255, 0, 255), 1, 8)
+        max_contour = max(contours, key=cv2.contourArea)
 
-    cv2.imshow('frame', frame)
+        rect = cv2.minAreaRect(max_contour)
+        box = cv2.boxPoints(rect)
+        box = np.int0(box)
+        cv2.drawContours(frame, [box], 0, (0, 0, 255), 2)
+
+        points, hull, defects = convexhull.get_hull_points(max_contour)
+
+        frame = cv2.drawContours(filtered_frame, contours, -1, (255, 0, 255), 1, 8)
+
+    cv2.imshow('frame', filtered_frame)
+    cv2.imshow('Pre Hist', preHist)
+    cv2.imshow('Post Hist', postHist)
+
+
     if cv2.waitKey(1) & 0xFF == ord('q'):
         break
