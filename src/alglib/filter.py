@@ -4,7 +4,7 @@ import numpy as np
 
 def guass(frame, sigma=1):
 
-    kernel = cv2.getGaussianKernel(3, sigma)
+    kernel = cv2.getGaussianKernel(7, sigma)
 
     frame = cv2.filter2D(frame, -1, kernel)
 

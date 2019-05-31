@@ -14,13 +14,15 @@ X_RESOLUTION = 1080
 Y_RESOLUTION = 720
 
 cap = init(X_RESOLUTION, Y_RESOLUTION)
-
 while True:
 
     # Capture frame-by-frame
     ret, frame = cap.read()
+    ret2, frame_pre = cap.read()
 
     frame_gpu = cv2.UMat(frame)
+
+    cv2.imshow('Pre Frame', cv2.resize(frame_gpu, None, fx=0.5, fy=0.5))
 
     #frame_gpu = two_filter.filtered_frame(frame_gpu)
 
@@ -31,6 +33,7 @@ while True:
     contours = processing.filter_contours(contours)
 
     preHist = processing.hsv_histogram(colour.hsv(frame))
+
     postHist = processing.hsv_histogram(colour.hsv(filtered_frame))
 
     if len(contours) > 0:
@@ -41,11 +44,10 @@ while True:
         box = np.int0(box)
         cv2.drawContours(frame, [box], 0, (0, 0, 255), 2)
 
-        points, hull, defects = convexhull.get_hull_points(max_contour)
+        convexhull.draw_hull_on_frame(frame, max_contour)
 
-        frame = cv2.drawContours(filtered_frame, contours, -1, (255, 0, 255), 1, 8)
-
-    cv2.imshow('frame', filtered_frame)
+    cv2.imshow('Pre Frame', cv2.resize(frame_pre, None, fx=0.5, fy=0.5))
+    cv2.imshow('Post Frame', cv2.resize(filtered_frame, None, fx=0.5, fy=0.5))
     cv2.imshow('Pre Hist', preHist)
     cv2.imshow('Post Hist', postHist)
 
