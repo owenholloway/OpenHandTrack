@@ -17,19 +17,34 @@ def get_hull_points(contour):
 
 def draw_hull_on_frame(frame, contour):
 
-    points, hull, defects = get_hull_points(contour)
+    hull_points, hull, defect_points = get_hull_points(contour)
 
-    hull_points = len(points)
-    if hull_points > 0:
+    hull_point_no = len(hull_points)
+    if hull_point_no > 0:
 
-        for i in range(0, hull_points):
+        for i in range(0, hull_point_no):
 
-            cv2.circle(frame, (int(points[i][0][0]), int(points[i][0][1])), int(10), (0, 255, 255), 2)
+            cv2.circle(frame, (int(hull_points[i][0][0]), int(hull_points[i][0][1])), int(10), (0, 255, 255), 2)
 
-            if i == hull_points - 1:
-                cv2.line(frame, (points[i][0][0], points[i][0][1]),
-                         (points[0][0][0], points[0][0][1]), (255, 255, 255), 1)
+            if i == hull_point_no - 1:
+                cv2.line(frame, (hull_points[i][0][0], hull_points[i][0][1]),
+                         (hull_points[0][0][0], hull_points[0][0][1]), (255, 255, 255), 1)
 
             else:
-                cv2.line(frame, (points[i][0][0], points[i][0][1]),
-                         (points[i + 1][0][0], points[i + 1][0][1]), (255, 255, 255), 1)
+                cv2.line(frame, (hull_points[i][0][0], hull_points[i][0][1]),
+                         (hull_points[i + 1][0][0], hull_points[i + 1][0][1]), (255, 255, 255), 1)
+
+    defect_point_no = len(defect_points)
+    if defect_point_no > 0:
+
+        for i in range(0, defect_point_no):
+
+            cv2.circle(frame, (int(defect_points[i][0][0]), int(defect_points[i][0][1])), int(10), (0, 255, 255), 2)
+
+            if i == defect_point_no - 1:
+                cv2.line(frame, (defect_points[i][0][0], defect_points[i][0][1]),
+                         (defect_points[0][0][0], defect_points[0][0][1]), (255, 255, 255), 1)
+
+            else:
+                cv2.line(frame, (defect_points[i][0][0], defect_points[i][0][1]),
+                         (defect_points[i + 1][0][0], defect_points[i + 1][0][1]), (255, 255, 255), 1)

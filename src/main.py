@@ -44,7 +44,7 @@ while True:
         box = np.int0(box)
         cv2.drawContours(frame, [box], 0, (0, 0, 255), 2)
 
-        convexhull.draw_hull_on_frame(frame, max_contour)
+        convexhull.draw_hull_on_frame(filtered_frame, max_contour)
 
     cv2.imshow('Pre Frame', cv2.resize(frame_pre, None, fx=0.5, fy=0.5))
     cv2.imshow('Post Frame', cv2.resize(filtered_frame, None, fx=0.5, fy=0.5))
