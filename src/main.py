@@ -18,11 +18,8 @@ while True:
 
     # Capture frame-by-frame
     ret, frame = cap.read()
-    ret2, frame_pre = cap.read()
 
     frame_gpu = cv2.UMat(frame)
-
-    cv2.imshow('Pre Frame', cv2.resize(frame_gpu, None, fx=0.5, fy=0.5))
 
     #frame_gpu = two_filter.filtered_frame(frame_gpu)
 
@@ -37,16 +34,17 @@ while True:
     postHist = processing.hsv_histogram(colour.hsv(filtered_frame))
 
     if len(contours) > 0:
+
         max_contour = max(contours, key=cv2.contourArea)
 
-        rect = cv2.minAreaRect(max_contour)
-        box = cv2.boxPoints(rect)
-        box = np.int0(box)
-        cv2.drawContours(frame, [box], 0, (0, 0, 255), 2)
+        #rect = cv2.minAreaRect(max_contour)
+        #box = cv2.boxPoints(rect)
+        #box = np.int0(box)
+        convexhull.draw_hull_on_frame(frame_gpu, max_contour)
+        #cv2.drawContours(frame_gpu, [box], 0, (0, 0, 255), 2)
+        cv2.drawContours(filtered_frame, [max_contour], -1, (255, 0, 0), 4, 8)
 
-        convexhull.draw_hull_on_frame(filtered_frame, max_contour)
-
-    cv2.imshow('Pre Frame', cv2.resize(frame_pre, None, fx=0.5, fy=0.5))
+    cv2.imshow('Output Frame', cv2.resize(frame_gpu, None, fx=0.5, fy=0.5))
     cv2.imshow('Post Frame', cv2.resize(filtered_frame, None, fx=0.5, fy=0.5))
     cv2.imshow('Pre Hist', preHist)
     cv2.imshow('Post Hist', postHist)
