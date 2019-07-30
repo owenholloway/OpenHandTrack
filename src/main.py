@@ -37,11 +37,11 @@ while True:
 
         max_contour = max(contours, key=cv2.contourArea)
 
-        #rect = cv2.minAreaRect(max_contour)
-        #box = cv2.boxPoints(rect)
-        #box = np.int0(box)
+        rect = cv2.minAreaRect(max_contour)
+        box = cv2.boxPoints(rect)
+        box = np.int0(box)
         convexhull.draw_hull_on_frame(frame_gpu, max_contour)
-        #cv2.drawContours(frame_gpu, [box], 0, (0, 0, 255), 2)
+        cv2.drawContours(frame_gpu, [box], 0, (0, 0, 255), 2)
         cv2.drawContours(filtered_frame, [max_contour], -1, (255, 0, 0), 4, 8)
 
     cv2.imshow('Output Frame', cv2.resize(frame_gpu, None, fx=0.5, fy=0.5))
