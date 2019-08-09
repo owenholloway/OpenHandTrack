@@ -9,6 +9,7 @@ import alglib.processing as processing
 import alglib.colour_space as colour
 from os import listdir
 from os.path import isfile, join
+import time
 
 path = "hands/"
 
@@ -21,14 +22,11 @@ hands = 1
 lower1 = np.array([0, 30, 0])
 upper1 = np.array([180, 255, 256])
 
-#lower2 = np.array([25, 30, 0])
-#upper2 = np.array([160, 256, 256])
-
 lower2 = np.array([25, 30, 0])
 upper2 = np.array([160, 30, 256])
 
-
 for hand in hand_files:
+
     img = cv2.imread(path+hand)
 
     img_blur = filter.guass(img, 0.8)
@@ -37,24 +35,29 @@ for hand in hand_files:
     hsv_filer2 = processing.hsv_mask(img_blur, lower2, upper2)
     cv2.bitwise_not(hsv_filer2, hsv_filer2)
 
-    hsv_filter_final = cv2.bitwise_and(hsv_filer1, hsv_filer2)
+    hsv_filter_final = cv2.bitwise_and(hsv_filer1, hsv_filer1)
 
+    blocking_filter = cv2.bitwise_and(hsv_filer1, hsv_filer2)
+
+    hsv_filter_final = cv2.bitwise_and(hsv_filer1, blocking_filter)
     img_masked = cv2.bitwise_and(img, img, mask=hsv_filter_final)
 
-    histograms.append(processing.hsv_histogram(colour.hsv(img_masked)))
+    mask = cv2.bitwise_and(hsv_filter_final, blocking_filter)
 
+    contours = cv2.findContours(mask, cv2.RETR_EXTERNAL, cv2.CHAIN_APPROX_SIMPLE)[-2]
+    max_contour = max(contours, key=cv2.contourArea)
+
+    rect = cv2.minAreaRect(max_contour)
+    box = cv2.boxPoints(rect)
+    box = np.int0(box)
+
+    cv2.drawContours(img, [box], 0, (0, 0, 255), 2)
+    cv2.drawContours(img, [max_contour], -1, (255, 0, 0), 4, 8)
+    cv2.imshow('frame' + str(hands), img)
     hands += 1
 
-    if hands > 50:
+    if hands > 100:
         break
-
-frame = 0
-
-for hist in histograms:
-
-    cv2.imshow('frame' + str(frame), hist)
-
-    frame += 1
 
 
 while True:
