@@ -6,12 +6,11 @@ import cv2
 import numpy as np
 import alglib.filter as filter
 import alglib.processing as processing
-import alglib.colour_space as colour
 from os import listdir
 from os.path import isfile, join
 import time
 
-path = "hands/"
+path = "hand_test/"
 
 hand_files = [f for f in listdir(path) if isfile(join(path, f))]
 
@@ -42,6 +41,8 @@ for hand in hand_files:
     hsv_filter_final = cv2.bitwise_and(hsv_filer1, blocking_filter)
     img_masked = cv2.bitwise_and(img, img, mask=hsv_filter_final)
 
+    img_canny = processing.auto_canny(img_blur, 1)
+
     mask = cv2.bitwise_and(hsv_filter_final, blocking_filter)
 
     contours = cv2.findContours(mask, cv2.RETR_EXTERNAL, cv2.CHAIN_APPROX_SIMPLE)[-2]
@@ -53,10 +54,10 @@ for hand in hand_files:
 
     cv2.drawContours(img, [box], 0, (0, 0, 255), 2)
     cv2.drawContours(img, [max_contour], -1, (255, 0, 0), 4, 8)
-    cv2.imshow('frame' + str(hands), img)
+    cv2.imshow('frame' + str(hands), img_canny)
     hands += 1
 
-    if hands > 100:
+    if hands > 2:
         break
 
 

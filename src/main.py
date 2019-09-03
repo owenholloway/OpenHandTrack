@@ -13,7 +13,10 @@ from vision import init
 X_RESOLUTION = 1080
 Y_RESOLUTION = 720
 
-cap = init(X_RESOLUTION, Y_RESOLUTION)
+#cap = init(X_RESOLUTION, Y_RESOLUTION)
+
+
+
 while True:
 
     # Capture frame-by-frame
