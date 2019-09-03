@@ -15,7 +15,7 @@ Y_RESOLUTION = 720
 
 #cap = init(X_RESOLUTION, Y_RESOLUTION)
 
-
+cap = cv2.VideoCapture("hand_test/VID_20190903_124718.mp4")
 
 while True:
 
