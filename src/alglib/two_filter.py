@@ -1,10 +1,9 @@
 import cv2
 import numpy as np
 import alglib.processing as processing
-import alglib.filter as filter
 
-lower1 = np.array([0, 0, 0])
-upper1 = np.array([180, 255, 256])
+lower1 = np.array([0, 30, 0])
+upper1 = np.array([180, 190, 256])
 
 lower2 = np.array([26, 0, 0])
 upper2 = np.array([40, 45, 256])
