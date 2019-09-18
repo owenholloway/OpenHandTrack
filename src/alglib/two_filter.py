@@ -3,16 +3,16 @@ import numpy as np
 import alglib.processing as processing
 import alglib.filter as filter
 
-lower1 = np.array([0, 0, 0])
+lower1 = np.array([0, 40, 0])
 upper1 = np.array([180, 255, 256])
 
 lower2 = np.array([26, 0, 0])
-upper2 = np.array([40, 45, 256])
+upper2 = np.array([26, 45, 256])
 
-lower3 = np.array([25, 0, 0])
-upper3 = np.array([160, 256, 256])
+lower3 = np.array([20, 0, 0])
+upper3 = np.array([180, 256, 256])
 
-lower4 = np.array([160, 125, 0])
+lower4 = np.array([180, 125, 0])
 upper4 = np.array([180, 256, 256])
 
 

@@ -13,15 +13,17 @@ from vision import init
 X_RESOLUTION = 1080
 Y_RESOLUTION = 720
 
-cap = init(X_RESOLUTION, Y_RESOLUTION)
+#cap = init(X_RESOLUTION, Y_RESOLUTION)
+
+cap = cv2.VideoCapture("hand_test/hands_test_1.mov")
+
+
 while True:
 
     # Capture frame-by-frame
     ret, frame = cap.read()
 
     frame_gpu = cv2.UMat(frame)
-
-    #frame_gpu = two_filter.filtered_frame(frame_gpu)
 
     filtered_frame, mask = two_filter.filtered_frame(frame)
 
@@ -36,10 +38,10 @@ while True:
     if len(contours) > 0:
 
         max_contour = max(contours, key=cv2.contourArea)
-
         rect = cv2.minAreaRect(max_contour)
         box = cv2.boxPoints(rect)
         box = np.int0(box)
+        points = convexhull.get_hull_points(max_contour)
         convexhull.draw_hull_on_frame(frame_gpu, max_contour)
         cv2.drawContours(frame_gpu, [box], 0, (0, 0, 255), 2)
         cv2.drawContours(filtered_frame, [max_contour], -1, (255, 0, 0), 4, 8)
