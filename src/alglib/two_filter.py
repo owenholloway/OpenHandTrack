@@ -3,7 +3,7 @@ import numpy as np
 import alglib.processing as processing
 import alglib.filter as filter
 
-lower1 = np.array([0, 40, 0])
+lower1 = np.array([0, 70, 0])
 upper1 = np.array([180, 255, 256])
 
 lower2 = np.array([26, 0, 0])

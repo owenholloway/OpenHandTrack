@@ -51,7 +51,7 @@ def draw_hull_on_frame(frame, contour):
 
         for i in range(0, hull_point_no):
 
-            cv2.circle(frame, (int(hull_points[i][0][0]), int(hull_points[i][0][1])), int(10), (0, 255, 255), 2)
+            cv2.circle(frame, (int(hull_points[i][0][0]), int(hull_points[i][0][1])), 4, (0, 255, 255), 2)
 
             if i == hull_point_no - 1:
                 cv2.line(frame, (hull_points[i][0][0], hull_points[i][0][1]),

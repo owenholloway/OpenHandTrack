@@ -8,6 +8,7 @@ import alglib.processing as processing
 import alglib.two_filter as two_filter
 import alglib.colour_space as colour
 import alglib.convex_hull as convexhull
+from matplotlib import pyplot as plt
 from vision import init
 
 X_RESOLUTION = 1080
@@ -41,16 +42,22 @@ while True:
         rect = cv2.minAreaRect(max_contour)
         box = cv2.boxPoints(rect)
         box = np.int0(box)
+
+        maxima, derivative, kcos_points = processing.contour_angle_maxima(max_contour, 30, 2)
+
+        if len(kcos_points) > 0:
+            for point in kcos_points:
+                cv2.circle(frame_gpu, (point[0][0][0], point[0][0][1]), 10, (0, 255, 255))
+
         points = convexhull.get_hull_points(max_contour)
         convexhull.draw_hull_on_frame(frame_gpu, max_contour)
-        cv2.drawContours(frame_gpu, [box], 0, (0, 0, 255), 2)
-        cv2.drawContours(filtered_frame, [max_contour], -1, (255, 0, 0), 4, 8)
+        cv2.drawContours(frame_gpu, [box], 0, (0, 0, 255), 1)
+        cv2.drawContours(filtered_frame, [max_contour], -1, (255, 0, 0), 1, 1)
 
-    cv2.imshow('Output Frame', cv2.resize(frame_gpu, None, fx=0.5, fy=0.5))
-    cv2.imshow('Post Frame', cv2.resize(filtered_frame, None, fx=0.5, fy=0.5))
+    cv2.imshow('Output Frame', cv2.resize(frame_gpu, None, fx=1, fy=1))
+    cv2.imshow('Post Frame', cv2.resize(filtered_frame, None, fx=1, fy=1))
     cv2.imshow('Pre Hist', preHist)
     cv2.imshow('Post Hist', postHist)
-
 
     if cv2.waitKey(1) & 0xFF == ord('q'):
         break
