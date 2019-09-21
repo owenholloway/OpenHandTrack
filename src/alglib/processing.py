@@ -3,7 +3,6 @@ import numpy as np
 import alglib.colour_space as colour
 from scipy.signal import find_peaks
 
-
 def hsv_mask(frame, lower=np.array([2, 35, 128], np.uint8), upper=np.array([30, 124, 255], np.uint8)):
 
     colour_space = colour.hsv(frame)
@@ -98,6 +97,80 @@ def contour_angle_maxima(contour, vectSize = 15, stepSize = 1):
         contour_points.append([contour[max_point*stepSize]])
 
     return maxima, angular_deriv, contour_points
+
+
+def contour_clustering(contour, cluster_points, grouping_distance=15):
+
+    contour_list = contour.tolist()
+
+    cluster_points_list = cluster_points[0].tolist()
+
+    contour_indexs = []
+
+    for point in cluster_points_list:
+
+        index = contour_list.index(point)
+
+        contour_indexs.append(index)
+
+    contour_indexs = sorted(contour_indexs)
+
+    cluster_groups = []
+
+    current_group = []
+
+    if len(contour_indexs) - 1 > 2:
+
+        for i in range(0, len(contour_indexs) - 1):
+
+            found_neighbour = False
+
+            if i == 0:
+                point_to_add = contour_list[contour_indexs[i]]
+                current_group.append(point_to_add)
+
+            A_dist = contour_indexs[i - 1]
+            B_dist = contour_indexs[i]
+
+            point_to_point_dist = abs(A_dist - B_dist)
+
+            if point_to_point_dist < grouping_distance:
+                found_neighbour = True
+                point_to_add = contour_list[contour_indexs[i]]
+                current_group.append(point_to_add)
+
+            if found_neighbour == False:
+                cluster_groups.append(current_group)
+                current_group = []
+                current_group.append(contour_list[contour_indexs[i]])
+
+    criteria = (cv2.TERM_CRITERIA_EPS + cv2.TERM_CRITERIA_MAX_ITER, 10, 1.0)
+
+    for i in range(0, len(cluster_groups)):
+
+        if len(cluster_groups[i]) > 1:
+            np_group = np.array(cluster_groups[i], dtype=int)
+            grouped_point = centeroidnp(np_group)
+            X = grouped_point[0]
+            Y = grouped_point[1]
+            cluster_groups[i] = [[[X, Y]]]
+
+    return cluster_groups
+
+
+def centeroidnp(arr):
+    points = arr.tolist()
+
+    x_sum = 0
+    y_sum = 0
+
+    length = len(points)
+
+    for point in points:
+        x_sum += point[0][0]
+        y_sum += point[0][1]
+
+    return int(x_sum/length), int(y_sum/length)
 
 
 def blob_detect(frame):
