@@ -28,7 +28,7 @@ for hand in hand_files:
 
     img = cv2.imread(path+hand)
 
-    img_blur = filter.guass(img, 0.8)
+    img_blur = filter.guass(img, 0)
 
     hsv_filer1 = processing.hsv_mask(img_blur, lower1, upper1)
     hsv_filer2 = processing.hsv_mask(img_blur, lower2, upper2)
@@ -39,9 +39,9 @@ for hand in hand_files:
     blocking_filter = cv2.bitwise_and(hsv_filer1, hsv_filer2)
 
     hsv_filter_final = cv2.bitwise_and(hsv_filer1, blocking_filter)
-    img_masked = cv2.bitwise_and(img, img, mask=hsv_filter_final)
+    img_masked = cv2.bitwise_and(img_blur, img_blur, mask=hsv_filter_final)
 
-    img_canny = processing.auto_canny(img_blur, 1)
+    img_canny = cv2.Canny(img_masked, 10, 40)
 
     mask = cv2.bitwise_and(hsv_filter_final, blocking_filter)
 
@@ -54,10 +54,10 @@ for hand in hand_files:
 
     cv2.drawContours(img, [box], 0, (0, 0, 255), 2)
     cv2.drawContours(img, [max_contour], -1, (255, 0, 0), 4, 8)
-    cv2.imshow('frame' + str(hands), img_canny)
+    cv2.imshow('frame' + str(hands), cv2.resize(img_canny, None, fx=0.5, fy=0.5))
     hands += 1
 
-    if hands > 2:
+    if hands > 3:
         break
 
 
