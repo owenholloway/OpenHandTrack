@@ -17,7 +17,7 @@ Y_RESOLUTION = 720
 #cap = init(X_RESOLUTION, Y_RESOLUTION)
 
 #cap = cv2.VideoCapture("hand_test/VID_20190903_124718.mp4")
-cap = cv2.VideoCapture("hand_test/VID_20190903_133338.mp4")
+cap = cv2.VideoCapture("hand_test/hands_test_2.mov")
 
 
 while True:
@@ -39,11 +39,11 @@ while True:
 
     postHist = processing.hsv_histogram(colour.hsv(filtered_frame))
 
-    cannyContours = processing.contour_canny(filtered_frame, 0.66)
+    cannyContours = processing.contour_canny(filtered_frame, 0.88)
 
-    if len(contours) > 0:
+    if len(cannyContours) > 0:
 
-        max_contour = max(contours, key=cv2.contourArea)
+        max_contour = max(cannyContours, key=cv2.contourArea)
 
         rect = cv2.minAreaRect(max_contour)
         box = cv2.boxPoints(rect)
@@ -53,8 +53,8 @@ while True:
         cv2.drawContours(filtered_frame, [max_contour], -1, (255, 0, 0), 4, 8)
 
     cv2.drawContours(filtered_frame, cannyContours, -1, (0, 255, 0), 2, 2)
-    cv2.imshow('Output Frame', cv2.resize(frame_gpu, None, fx=0.5, fy=0.5))
-    cv2.imshow('Post Frame', cv2.resize(filtered_frame, None, fx=0.5, fy=0.5))
+    cv2.imshow('Output Frame', cv2.resize(frame_gpu, None, fx=1, fy=1))
+    cv2.imshow('Post Frame', cv2.resize(filtered_frame, None, fx=1, fy=1))
     cv2.imshow('Pre Hist', preHist)
     cv2.imshow('Post Hist', postHist)
 
