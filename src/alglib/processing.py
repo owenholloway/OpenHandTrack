@@ -119,9 +119,9 @@ def contour_clustering(contour, cluster_points, grouping_distance=15):
 
     current_group = []
 
-    if len(contour_indexs) - 1 > 2:
+    if len(contour_indexs) - 1 > 1:
 
-        for i in range(0, len(contour_indexs) - 1):
+        for i in range(0, len(contour_indexs)):
 
             found_neighbour = False
 
