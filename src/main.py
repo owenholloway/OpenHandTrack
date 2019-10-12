@@ -16,10 +16,14 @@ Y_RESOLUTION = 720
 
 #cap = init(X_RESOLUTION, Y_RESOLUTION)
 
-cap = cv2.VideoCapture("hand_test/hands_test_4.mov")
+cap = cv2.VideoCapture("hand_test/Accuracy_Test.mov")
 
+frame_total = 0
+frame_with_hand = 0
 
 while True:
+
+    frame_total += 1
 
     start = time.time()
 
@@ -32,7 +36,7 @@ while True:
 
     contours = cv2.findContours(mask, cv2.RETR_EXTERNAL, cv2.CHAIN_APPROX_SIMPLE)[-2]
 
-    contours = processing.filter_contours(contours)
+    contours = processing.filter_contours(contours, 5000)
 
     #preHist = processing.hsv_histogram(colour.hsv(frame))
 
@@ -41,11 +45,11 @@ while True:
 
 
     if len(contours) > 0:
-
+        frame_with_hand += 1
         max_contour = max(contours, key=cv2.contourArea)
-        #rect = cv2.minAreaRect(max_contour)
-        #box = cv2.boxPoints(rect)
-        #box = np.int0(box)
+        rect = cv2.minAreaRect(max_contour)
+        box = cv2.boxPoints(rect)
+        box = np.int0(box)
 
         points = convexhull.get_hull_points(max_contour)
         clusted_points = processing.contour_clustering(max_contour, points, 20)
@@ -55,12 +59,13 @@ while True:
             #cv2.circle(frame_gpu, (int(clusted_points[i][0][0][0]), int(clusted_points[i][0][0][1])), 4, (211, 0, 255), 2)
             #cv2.putText(frame_gpu, str(i), (int(clusted_points[i][0][0][0]), int(clusted_points[i][0][0][1])), cv2.FONT_HERSHEY_SIMPLEX, 1.0, 25)
 
-        #cv2.drawContours(frame_gpu, [box], 0, (0, 0, 255), 1)
+        cv2.drawContours(frame_gpu, [box], 0, (0, 0, 255), 1)
         #cv2.drawContours(frame_gpu, [max_contour], -1, (255, 0, 0), 1, 1)
 
     end = time.time()
     print((end - start)*1000)
-    #cv2.imshow('Output Frame', cv2.resize(frame_gpu, None, fx=1, fy=1))
+    print("Accuracy: " + str(frame_with_hand/frame_total * 100) + "%, over: " + str(frame_total) + " total frames")
+    cv2.imshow('Output Frame', cv2.resize(frame_gpu, None, fx=1, fy=1))
     #cv2.imshow('Post Frame', cv2.resize(filtered_frame, None, fx=1, fy=1))
     #cv2.imshow('Pre Hist', preHist)
     #cv2.imshow('Post Hist', postHist)
