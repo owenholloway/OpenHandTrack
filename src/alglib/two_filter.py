@@ -7,7 +7,7 @@ lower1 = np.array([0, 70, 0])
 upper1 = np.array([180, 255, 256])
 
 lower2 = np.array([26, 0, 0])
-upper2 = np.array([26, 45, 256])
+upper2 = np.array([26, 40, 256])
 
 lower3 = np.array([20, 0, 0])
 upper3 = np.array([160, 256, 256])
