@@ -3,7 +3,10 @@
 # 206891
 # 2019
 import cv2
+import gc
+import copy
 import numpy as np
+import alglib.filter as filter
 import alglib.processing as processing
 import alglib.two_filter as two_filter
 import threading as threading
@@ -32,9 +35,11 @@ def drawing_thread(frame_thread, box, max_contour, clusted_points):
 first_run = True
 
 while True:
-
+    gc.enable()
     # Capture frame-by-frame
     ret, frame = cap.read()
+
+    guass_frame = filter.guass(frame)
 
     filtered_frame, mask = two_filter.filtered_frame(frame)
 
@@ -48,11 +53,14 @@ while True:
 
     if first_run:
         first_run = False
-        frame_gpu = cv2.UMat(frame)
+        frame_gpu = copy.copy(frame)
+        #frame_gpu = cv2.UMat(frame)
     else:
         drawing.join()
-        cv2.imshow('Output Frame', cv2.resize(frame_gpu, None, fx=1, fy=1))
-        frame_gpu = cv2.UMat(frame)
+        cv2.imshow('Output Frame', cv2.resize(frame_gpu, None, fx=1.5, fy=1.5))
+        gc.collect()
+        frame_gpu = copy.copy(frame)
+        #frame_gpu = cv2.UMat(frame)
 
     if len(contours) > 0:
 
@@ -76,4 +84,3 @@ while True:
 
     if cv2.waitKey(1) & 0xFF == ord('q'):
         break
-
